@@ -1,12 +1,13 @@
-import './App.css';
-import RegistrationForm from './components/auth/RegistrationForm.jsx';
+import React from 'react';
+import Router from './components/routing/router';
+import RegistrationForm from './components/auth/RegistrationForm';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <RegistrationForm />
+    <div className="app">
+      {<Router />}
     </div>
   );
-}
+};
 
 export default App;

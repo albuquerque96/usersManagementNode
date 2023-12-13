@@ -1,65 +1,122 @@
-const React = require('react');
-const { useState } = React;
-const Axios = require('axios');
+import { useState, useEffect } from 'react';
+const validateEmail =  require('../../server/validation.js').validateEmail;
+const validatePassword =  require('../../server/validation.js').validatePassword;
 
-const validateEmail = require('../../server/validation.js').validateEmail;
-const validatePassword = require('../../server/validation.js').validatePassword;
+const makeRegistrationRequest = async (email, password) => {
+  try {
+    const response = await fetch('http://localhost:5000/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Registration failed');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
 
 const RegistrationForm = () => {
+  const [errorMessage, setErrorMessage] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const emailValidationResult = validateEmail(email);
     const passwordValidationResult = validatePassword(password);
 
+    let errorMessages = [];
+
     if (!emailValidationResult) {
-      setErrorMessage("email format is invalid");
-      return;
+      errorMessages.push('Invalid email format');
     }
 
-    if (passwordValidationResult.length>0) {
-      setErrorMessage(passwordValidationResult);
-      return;
-    }
-
-    try {
-      const response = await Axios.post('/register', {
-        email,
-        password,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        setErrorMessage(errorData.error); // Display error message from server
-      } else {
-        setErrorMessage('Registration successful');
+    if (passwordValidationResult.length > 0) {
+      for (const error of passwordValidationResult) {
+        errorMessages.push(error);
       }
-    } catch (error) {
-      console.error('Error sending register request:', error.message);
-      setErrorMessage('Error sending register request');
+    }
+
+    if (errorMessages.length > 0) {
+      setErrorMessage(errorMessages.join(','));
+      return;
+    }
+
+    const registrationResponse = await makeRegistrationRequest(email, password);
+
+    if (!registrationResponse.ok) {
+      const error = registrationResponse.data.error;
+      setErrorMessage(error);
+    } else {
+      setErrorMessage('Registration successful!');
     }
   };
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    // Submit the form using an asynchronous function with await
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+
+      try {
+        // Simulate an API call to register the user
+        const response = await fetch('http://localhost:5000/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: user.username,
+            password: user.password,
+          }),
+        });
+
+        // The response is now available
+        if (response.ok) {
+          // The registration was successful
+          const registrationData = await response.json();
+          if (registrationData.registered) {
+            setUser({ ...user, registered: true });
+          } else {
+            console.error('Registration failed');
+          }
+        } else {
+          // The registration was not successful
+          console.error('Registration failed');
+        }
+      } catch (error) {
+        // An error occurred during the registration
+        console.error(error);
+      }
+    };
+
+    // Attach the handleSubmit handler to the form
+    const form = document.getElementById('registerForm');
+    form.addEventListener('submit', handleSubmit);
+  }, []);
 
   return (
-    <div >
-      <h1>Registration</h1>
-
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email:</label>
-        <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-
-        <label htmlFor="password">Password:</label>
-        <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-
-        <button type="submit">Register</button>
-
-        {errorMessage && <span className="error-message">{errorMessage}</span>}
-      </form>
-    </div>
+    <form id="registerForm" onSubmit={handleSubmit}>
+      <label>Username:</label>
+      <input type="text" value={user.username} onChange={(event) => setUser({ ...user, username: event.target.value })} />
+      <br />
+      <label>Password:</label>
+      <input type="password" value={user.password} onChange={(event) => setUser({ ...user, password: event.target.value })} />
+      <br />
+      <button type="submit">Register</button>
+      {user.registered && <p>Registration successful!</p>}
+    </form>
   );
 };
 

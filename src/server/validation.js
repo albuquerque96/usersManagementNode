@@ -1,9 +1,9 @@
 function validateEmail(email) {
-    const regex = /^(([^<>()[\]\\.,;:\s@"]+)@([a-zA-Z0-9\-\.]+))\.([a-zA-Z]{2,})$/;
+    const regex = /^(([^<>()[\]\\.,;:\s@"]+)@([a-zA-Z0-9\-.]+))\.([a-zA-Z]{2,})$/;
     return regex.test(email);
   }
   
-  const REGEX_UPPERCASE = /^\w+[A-Z]/;
+  const REGEX_UPPERCASE = /[A-Z]/;
   const REGEX_NUMBER = /^\w+\d/;
   const REGEX_SPECIAL_CHARACTER = /^\w+[!@#$%^&*]+/;
   
