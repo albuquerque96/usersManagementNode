@@ -1,122 +1,118 @@
-import { useState, useEffect } from 'react';
-const validateEmail =  require('../../server/validation.js').validateEmail;
-const validatePassword =  require('../../server/validation.js').validatePassword;
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../css/RegistrationForm.css';
+const validateEmailFormat = require('../../server/formatValidation.js').validateEmailFormat;
+const validatePasswordFormat = require('../../server/formatValidation.js').validatePasswordFormat;
 
 const makeRegistrationRequest = async (email, password) => {
-  try {
-    const response = await fetch('http://localhost:5000/register', {
+ try {
+    const response = await fetch('http://localhost:5000/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         email,
-        password,
+        password
       }),
     });
 
     if (!response.ok) {
       throw new Error('Registration failed');
     }
-
     return await response.json();
-  } catch (error) {
+
+ } catch (error) {
     console.error(error);
     return null;
-  }
+ }
 };
-
 const RegistrationForm = () => {
+  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState(false);
+  const [passwordErrors, setPasswordErrors] = useState([]);
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const emailValidationResult = validateEmail(email);
-    const passwordValidationResult = validatePassword(password);
+    const sanitizedPassword = password.replace(/[^a-zA-Z0-9!@#$%^&*()_+-=|{}[]\\<>\/?.,:\s]/g, '');
+    const sanitizedEmail = email.replace(/[^a-zA-Z0-9._@-]/g, '');
+    const emailValidationResult = validateEmailFormat(sanitizedEmail);
+    const passwordValidationResult = validatePasswordFormat(sanitizedPassword);
 
     let errorMessages = [];
 
     if (!emailValidationResult) {
       errorMessages.push('Invalid email format');
-    }
-
-    if (passwordValidationResult.length > 0) {
-      for (const error of passwordValidationResult) {
-        errorMessages.push(error);
-      }
-    }
-
-    if (errorMessages.length > 0) {
-      setErrorMessage(errorMessages.join(','));
-      return;
-    }
-
-    const registrationResponse = await makeRegistrationRequest(email, password);
-
-    if (!registrationResponse.ok) {
-      const error = registrationResponse.data.error;
-      setErrorMessage(error);
+      setEmailError(true);
     } else {
-      setErrorMessage('Registration successful!');
+      setEmailError(false);
+    }
+
+    if (passwordValidationResult.length >  0) {
+      setPasswordErrors(passwordValidationResult);
+    } else {
+      setPasswordErrors([]);
+    }
+
+    if (passwordValidationResult  && emailValidationResult) {
+      const registrationResponse = await makeRegistrationRequest(email, password);
+
+      if (!registrationResponse) {
+        setErrorMessage('Registration failed');
+      } else {
+        setErrorMessage('Registration successful!');
+        navigate('/dashboard');
+      }
     }
   };
-  const [user, setUser] = useState({});
 
-  useEffect(() => {
-    // Submit the form using an asynchronous function with await
-    const handleSubmit = async (event) => {
-      event.preventDefault();
-
-      try {
-        // Simulate an API call to register the user
-        const response = await fetch('http://localhost:5000/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: user.username,
-            password: user.password,
-          }),
-        });
-
-        // The response is now available
-        if (response.ok) {
-          // The registration was successful
-          const registrationData = await response.json();
-          if (registrationData.registered) {
-            setUser({ ...user, registered: true });
-          } else {
-            console.error('Registration failed');
-          }
-        } else {
-          // The registration was not successful
-          console.error('Registration failed');
-        }
-      } catch (error) {
-        // An error occurred during the registration
-        console.error(error);
-      }
-    };
-
-    // Attach the handleSubmit handler to the form
-    const form = document.getElementById('registerForm');
-    form.addEventListener('submit', handleSubmit);
-  }, []);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
-    <form id="registerForm" onSubmit={handleSubmit}>
-      <label>Username:</label>
-      <input type="text" value={user.username} onChange={(event) => setUser({ ...user, username: event.target.value })} />
-      <br />
-      <label>Password:</label>
-      <input type="password" value={user.password} onChange={(event) => setUser({ ...user, password: event.target.value })} />
-      <br />
-      <button type="submit">Register</button>
-      {user.registered && <p>Registration successful!</p>}
-    </form>
+    <div className="registration-form">
+      <h2>Register</h2>
+      <form id="registerForm" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            className={emailError ? 'form-control error' : 'form-control'}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          {emailError && <small className="error-message">Invalid email format</small>}
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password:</label>
+          <input
+            type={showPassword ? 'text' : 'password'}
+            id="password"
+            className={passwordErrors.length >  0 ? 'form-control error' : 'form-control'}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button type="button" className="toggle-password-button" onClick={togglePasswordVisibility}>
+            {showPassword ? <i className="fas fa-eye-slash"></i> : <i className="fas fa-eye"></i>}
+          </button>
+          {passwordErrors.length >  0 && (
+            <ul className="error-messages">
+              {passwordErrors.map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <button type="submit" className="submit-button">Register</button>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+      </form>
+    </div>
   );
 };
 

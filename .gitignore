@@ -3,3 +3,6 @@ package-lock.json
 README.md
 manifest.json
 launch.json
+.env
+package.json
+settings.json

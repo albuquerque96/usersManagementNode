@@ -1,8 +1,12 @@
 const express = require('express');
+const router = express.Router();
+const app = express()
+const bodyParser = require('body-parser');
+ app.use(bodyParser.json());
 const path = require('path');
 const bcrypt = require('bcrypt');
 const User = require('../../db/models/user');
-const router = express.Router();
+
 
 const verifyCredentials = async (email, password) => {
   const user = await User.findOne({ email });

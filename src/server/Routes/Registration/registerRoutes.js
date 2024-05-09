@@ -1,12 +1,13 @@
 const express = require('express');
-const  validateUserRegistration  = require('./registration.js');
+const bodyParser = require('body-parser');
 const router = express.Router();
+const validateUserRegistration = require('./registration.js');
 
+// Use body-parser middleware here
+router.use(bodyParser.json());
 
-// Route handler for user registration
-router.post('/register', validateUserRegistration);
-
-// Route handler for displaying the registration form
+// Now define your routes
+router.post('/user', validateUserRegistration);
 
 // Export the route object
 module.exports = router;

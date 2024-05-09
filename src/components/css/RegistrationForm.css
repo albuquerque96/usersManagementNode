@@ -1,0 +1,84 @@
+.registration-form {
+    max-width:  400px;
+    margin:  0 auto;
+    padding:  20px;
+    background-color: #f8f8f8;
+    border-radius:  5px;
+    box-shadow:  0  2px  4px rgba(0,  0,  0,  0.1);
+  }
+  
+  .registration-form h2 {
+    text-align: center;
+    margin-bottom:  20px;
+  }
+  
+  .form-group {
+    margin-bottom:  15px;
+  }
+  
+  .form-control {
+    width:  100%;
+    padding:  10px;
+    border:  1px solid #ddd;
+    border-radius:  3px;
+    font-size:  14px;
+  }
+  
+  .form-control.error {
+    border-color: #ff4d4d;
+  }
+  
+  .error-message {
+    color: #ff4d4d;
+    font-size:  12px;
+    margin-top:  5px;
+  }
+  
+  .error-messages {
+    list-style: none;
+    padding:  0;
+    margin-top:  5px;
+  }
+  
+  .error-messages li {
+    color: #ff4d4d;
+    font-size:  12px;
+    margin-bottom:  5px;
+  }
+  
+  .submit-button {
+    width:  100%;
+    padding:  10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius:  3px;
+    cursor: pointer;
+    font-size:  14px;
+    margin-top:  15px;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+
+.toggle-password-button {
+  display: block;
+  margin-top:   5px;
+  padding:   5px   10px;
+  background-color: transparent;
+  border:   1px solid #ddd;
+  border-radius:   3px;
+  cursor: pointer;
+  font-size:   12px;
+  color: #333; /* Adjust the color as needed */
+}
+
+.toggle-password-button:hover {
+  background-color: #e8e8e8;
+}
+
+.toggle-password-button i {
+  margin-right:   5px; /* Add some space between the icon and the text */
+}

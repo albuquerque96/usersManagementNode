@@ -1,4 +1,4 @@
-function validateEmail(email) {
+function validateEmailFormat(email) {
     const regex = /^(([^<>()[\]\\.,;:\s@"]+)@([a-zA-Z0-9\-.]+))\.([a-zA-Z]{2,})$/;
     return regex.test(email);
   }
@@ -7,7 +7,7 @@ function validateEmail(email) {
   const REGEX_NUMBER = /^\w+\d/;
   const REGEX_SPECIAL_CHARACTER = /^\w+[!@#$%^&*]+/;
   
-  function validatePassword(password) {
+  function validatePasswordFormat(password) {
       const errors=[]
       if (password.length < 6) {
           errors.push("Password must be at least 6 characters long");
@@ -30,7 +30,6 @@ function validateEmail(email) {
   }
 
   module.exports = {
-    validateEmail,
-    validatePassword,
+    validateEmailFormat,
+    validatePasswordFormat
   };
-  

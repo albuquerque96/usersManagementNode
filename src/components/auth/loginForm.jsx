@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Axios from 'axios';
-import credentialsValidator from '../../server/validation.js';
+import credentialsValidator from '../../server/formatValidation.js';
 const validateEmail = credentialsValidator.validateEmail
 const validatePassword= credentialsValidator.validatePassword
 const LoginForm = () => {
