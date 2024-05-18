@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const TaskSchema = require('./models/task.js');
+const TaskSchema = require('../db/models/task.js');
 const Task = mongoose.model('Task', TaskSchema);
 
 const TaskController = {

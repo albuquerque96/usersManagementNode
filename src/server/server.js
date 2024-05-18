@@ -1,7 +1,7 @@
 const express = require('express');
-const registerRoutes = require('./Routes/Registration/registerRoutes.js');
-const loginRoutes = require('./Routes/Login/loginRoutes.js');
-const blogRoutes = require('./Routes/Blog/blogRoutes.js');
+const registerRoutes = require('./Routes/registerRoutes.js');
+const loginRoutes = require('./Routes/loginRoutes.js');
+const blogRoutes = require('./Routes/blogRoutes.js');
 const connectToDatabase = require('./db/db.js');
 const cors = require('cors');
 

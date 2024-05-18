@@ -1,4 +1,4 @@
-const Blog = require('./models/blog');
+const Blog = require('../db/models/blog');
 
 // Função para criar um novo usuário
 exports.createBlog = async (blog) => {

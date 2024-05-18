@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
  app.use(bodyParser.json());
 const path = require('path');
 const bcrypt = require('bcrypt');
-const User = require('../../db/models/user');
+const User = require('../db/models/user');
 
 
 const verifyCredentials = async (email, password) => {
