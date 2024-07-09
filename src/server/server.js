@@ -1,7 +1,8 @@
 const express = require('express');
-const registerRoutes = require('./Routes/registerRoutes.js');
-const loginRoutes = require('./Routes/loginRoutes.js');
+const authRoutes = require('./Routes/authRoutes');
+const userRoutes = require('./Routes/userRoutes');
 const blogRoutes = require('./Routes/blogRoutes.js');
+const taskRoutes = require('./Routes/taskRoutes.js');
 const connectToDatabase = require('./db/db.js');
 const cors = require('cors');
 
@@ -12,13 +13,14 @@ app.use(cors({
   allowedOrigins
 }));
 
-// Função assíncrona para iniciar o servidor após a conexão com o banco de dados
+// async funtion to start db then the server 
 const startBackEnd = async () => {
   try {
     await connectToDatabase();
-    app.use('/', registerRoutes); // Endpoint register
-    app.use('/', loginRoutes); // Endpoint login
+    app.use('/', authRoutes); // Endpoint register
+    app.use('/', userRoutes); // Endpoint login
     app.use('/', blogRoutes); // Endpoint blog
+    app.use('/', taskRoutes); // Endpoint task
 
     const port = process.argv[2] ||  5000;
     app.listen(port, () => {
@@ -29,5 +31,5 @@ const startBackEnd = async () => {
   }
 };
 
-// Inicia a bd e server 
+
 startBackEnd();

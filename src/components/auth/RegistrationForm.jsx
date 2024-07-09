@@ -1,32 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/RegistrationForm.css';
-const validateEmailFormat = require('../../server/formatValidation.js').validateEmailFormat;
-const validatePasswordFormat = require('../../server/formatValidation.js').validatePasswordFormat;
+import { register } from '../../server/services/authService';
+import credentialsValidator from '../../server/services/credentialsFormatValidation';
+const validateEmailFormat = credentialsValidator.validateEmailFormat
+const validatePasswordFormat= credentialsValidator.validatePasswordFormat
 
-const makeRegistrationRequest = async (email, password) => {
- try {
-    const response = await fetch('http://localhost:5000/user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email,
-        password
-      }),
-    });
 
-    if (!response.ok) {
-      throw new Error('Registration failed');
-    }
-    return await response.json();
-
- } catch (error) {
-    console.error(error);
-    return null;
- }
-};
 const RegistrationForm = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
@@ -59,7 +39,7 @@ const RegistrationForm = () => {
     }
 
     if (passwordValidationResult  && emailValidationResult) {
-      const registrationResponse = await makeRegistrationRequest(email, password);
+      const registrationResponse = await register(email, password);
 
       if (!registrationResponse) {
         setErrorMessage('Registration failed');

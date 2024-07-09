@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import Axios from 'axios';
-import credentialsValidator from '../../server/formatValidation.js';
-const validateEmail = credentialsValidator.validateEmail
-const validatePassword= credentialsValidator.validatePassword
+import { useNavigate } from 'react-router-dom';
+import { login } from '../../server/services/authService';
+import credentialsValidator from '../../server/services/credentialsFormatValidation';
+const validateEmailFormat = credentialsValidator.validateEmailFormat
+const validatePasswordFormat= credentialsValidator.validatePasswordFormat
 const LoginForm = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -11,29 +13,28 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateEmail(email)) {
+    if (!validateEmailFormat(email)) {
       setErrorMessage('Invalid email address');
       return;
     }
-    if (!validatePassword(password)) {
+    if (!validatePasswordFormat(password)) {
       return
     }
 
     try {
-        const response = await Axios.post('http://localhost:5000/login', {
-        email,
-        password,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        setErrorMessage(errorData.error); // Display error message from server
-      } 
+        const response = await login(email,password)
+      // Successful login
+      if (response.status === 200) {     
+        setErrorMessage(''); // Clear any previous error message
+        // Redirect to dashboard or another page upon successful login
+        navigate('/dashboard');
+      } else {
+        // Handle other status codes (e.g., 401 for unauthorized)
+        setErrorMessage(response.data.message); 
+      }
     } catch (error) {
-      console.error('Error sending register request:', error.message);
-
-      // Display error message
-      setErrorMessage('Error sending register request');
+      console.error('Error sending login request:', error.message);     
+      setErrorMessage(error.message);
     }
   };
 

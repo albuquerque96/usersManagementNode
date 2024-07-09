@@ -4,10 +4,10 @@ const secretKey = process.env.JWT_SECRET_KEY;
 
 
 const tokenActions = {
-  createToken: async (email, roles) => {
-    return jwt.sign({ email, roles }, secretKey, { expiresIn: '4h' });
+  createToken: async (id,email, roles) => {
+    return jwt.sign({id,email, roles }, secretKey, { expiresIn: '4h' });
   },
-  revokeToken: async (userId) => {
+  revokeToken: async (token) => {
     // Implemente a lógica para revogar tokens aqui
   },
   refreshToken: async (userId,email,password) => {
@@ -20,11 +20,11 @@ const tokenActions = {
     }
 
     try {
-       await jwt.verify(token, secretKey);
+      await jwt.verify(token, secretKey);
       return true
       
     } catch (err) {
-      return { message: 'Invalid token' }
+      return { error: err.message }
     }
   }
 };

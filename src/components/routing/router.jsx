@@ -4,7 +4,8 @@ import LoginForm from '../auth/loginForm';
 import RegisterForm from '../auth/RegistrationForm';
 import Dashboard from '../dashboard';
 import Profile from '../profile';
-import Task from '../task';
+import TaskList from '../taskList';
+import TaskDetail from '../taskDetail';
 
 const Router = () => {
   return (
@@ -14,7 +15,10 @@ const Router = () => {
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/task" element={<Task />} />
+        <Route path="/tasks" element={<TaskList />} />
+        <Route path="/tasks/:taskId" element={<TaskDetail />} />
+
+
       </Routes>
     </BrowserRouter>
   );

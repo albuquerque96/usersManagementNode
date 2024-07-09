@@ -1,21 +1,25 @@
-const mongoose = require('mongoose');
-const TaskSchema = require('../db/models/task.js');
-const Task = mongoose.model('Task', TaskSchema);
+const task = require('../db/models/task.js');
+const Task = require('../db/models/task.js');
+
 
 const TaskController = {
-  createTask: async (taskData) => {
-    const task = new Task(taskData);
+  createTask: async (req,res) => {
+    const task = new Task(req.body);
     await task.save();
+    return res.status(200).json({ message:'task created successfully'});
   },
 
-  getAllTasks: async () => {
+  getAllTasks: async (req,res) => {
+    const token= req.cookies.jwtToken;
     const tasks = await Task.find({});
-    return tasks;
+    return res.status(200).json({ tasks:tasks});
+    
   },
 
-  getTask: async (taskId) => {
-    const task = await Task.findById(taskId);
-    return task;
+  getTask: async (req,res) => {
+    const taskid = req.params.id
+    const task = await Task.findById(taskid);
+    return res.status(200).json({ task:task});
   },
 
   updateTask: async (taskId, updatedTaskData) => {
