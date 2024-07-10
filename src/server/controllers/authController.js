@@ -5,6 +5,13 @@ const { validateEmailFormat, validatePasswordFormat } = require('../services/cre
 
 const verifyCredentials = async (req, res) => {
   const { email, password } = req.body;
+
+  if(!validateEmailFormat(email)) {
+    return res.status(0).json({message:"invalid email format"})
+  }
+  if(!validatePasswordFormat(password)) {
+    return res.status(0).json({message:"invalid password format"})
+  }
   try {
     const user = await User.findOne({ email });
     if (!user) {
@@ -18,6 +25,7 @@ const verifyCredentials = async (req, res) => {
 
     const token = tokenActions.createToken(user._id, email, user.roles);
     res.cookie('jwtToken', token, { domain: 'localhost', path: '/', httpOnly: true });
+
     return res.status(200).json({ message: "Login successful" });
   } catch (error) {
     console.log(error);

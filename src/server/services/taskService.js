@@ -1,11 +1,14 @@
 import axios from 'axios';
-axios.defaults.withCredentials = true;
-const API_URL = 'http://localhost:5000';
 
+// Configuração global do Axios
+axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.withCredentials = true;
+
+// Funções de API
 export const getTasks = async () => {
-  return axios.get(`${API_URL}/tasks`);
+  return axios.get('/tasks');
 };
 
 export const getTaskById = async (taskId) => {
-  return axios.get(`${API_URL}/tasks/${taskId}`);
+  return axios.get(`/tasks/${taskId}`);
 };

@@ -1,12 +1,12 @@
 import axios from 'axios';
+
+axios.defaults.baseURL = 'http://localhost:5000';
 axios.defaults.withCredentials = true;
-const API_URL = 'http://localhost:5000';
 
 export const login = async (email, password) => {
-  return axios.post(`${API_URL}/login`, { email, password });
+  return axios.post('/login', { email, password });
 };
 
-export const register  = async (email,password) => {
-    return axios.post(`${API_URL}/user`, { email, password });
-  };
-
+export const register = async (email, password) => {
+  return axios.post('/user', { email, password });
+};
