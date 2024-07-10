@@ -24,7 +24,13 @@ const registerUser = async (req, res) => {
   try {
     await newUser.save();
     const token = tokenActions.createToken(newUser._id, email, newUser.roles);
-    res.cookie('jwtToken', token, { domain: 'localhost', path: '/', httpOnly: true });
+    res.cookie('jwtToken', token, {
+      domain: 'localhost',
+      path: '/',
+      httpOnly: true,
+      secure: false, // Defina como true se estiver usando HTTPS
+      sameSite: 'Lax',
+    });
     res.status(201).json({ message: 'User created successfully!' });
   } catch (error) {
     console.error(error);

@@ -1,4 +1,3 @@
-const task = require('../db/models/task.js');
 const Task = require('../db/models/task.js');
 
 
@@ -10,8 +9,9 @@ const TaskController = {
   },
 
   getAllTasks: async (req,res) => {
+    
     const token= req.cookies.jwtToken;
-    const tasks = await Task.find({});
+    const tasks = await Task.find({aassignedto:token.id})
     return res.status(200).json({ tasks:tasks});
     
   },

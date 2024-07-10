@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getTasks } from '../services/taskService';
+import { getTasks } from '../server/services/taskService';
 import { Link } from 'react-router-dom';
 
 const TaskList = () => {

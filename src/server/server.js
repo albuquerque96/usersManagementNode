@@ -10,7 +10,8 @@ const app = express();
 const allowedOrigins = ['http://127.0.0.1:5000','http://127.0.0.1:3000'];  
 
 app.use(cors({
-  allowedOrigins
+  allowedOrigins,
+  credentials: true,
 }));
 
 // async funtion to start db then the server 

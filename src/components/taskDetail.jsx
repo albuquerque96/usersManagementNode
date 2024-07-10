@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getTaskById } from '../services/taskService';
+import { getTaskById } from '../server/services/taskService';
 
 const TaskDetail = () => {
   const { taskId } = useParams();
