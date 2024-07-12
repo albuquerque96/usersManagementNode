@@ -8,6 +8,6 @@ router.use(bodyParser.json());
 router.use(cookieParser());
 
 router.post('/user', registerUser);
-router.delete('/user', deleteUser);
+router.delete('/user/:id', deleteUser);
 
 module.exports = router;
